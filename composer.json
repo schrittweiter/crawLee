@@ -1,0 +1,25 @@
+{
+  "name": "schrittweiter/crawlee",
+  "description": "Get any buisness data by providing just a website link",
+  "type": "library",
+  "require": {
+    "php": ">=8.1"
+  },
+  "authors": [
+    {
+      "name": "David Kuhlmann",
+      "email": "dk@schrittweiter.de"
+    },
+    {
+      "name": "Tim Rasche",
+      "email": "tr@enbidia.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "schrittweiter\\crawLee\\": "src/"
+    }
+  }
+}
