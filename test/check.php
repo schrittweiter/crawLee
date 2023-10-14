@@ -2,8 +2,10 @@
 
 include_once '../src/crawLee.php';
 
-$website = new schrittweiter\crawLee\crawLee('https://www.spiegel.de/impressum');
+$website = new crawLee\crawLee();
 
-echo '<pre>';
-var_dump($website->extractVAT());
-echo '</pre>';
+$website
+	->setConfig(['sets' => ['VAT','HRB','Phone','Social','Email','Address']])
+	->setUrl('https://www.spiegel.de/impressum')
+	->html()
+	->extract();
