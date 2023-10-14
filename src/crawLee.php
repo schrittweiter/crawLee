@@ -1,129 +1,110 @@
 <?php
 
-namespace schrittweiter\crawLee;
+namespace crawLee;
 
+require_once dirname(__FILE__) . '/Adapters/Base.php';
 
+use Exception;
 
-/**
- * VCard PHP Class to generate .vcard files and save them to a file or output as a download.
- */
 class crawLee {
 
-	private $htmlContent;
-	/**
-	 * @var mixed|string
-	 */
 	private mixed $url;
+	/**
+	 * @var array|mixed
+	 */
+	private mixed $config;
+	private string|false $html;
 
-	public function __construct($url = '') {
+	public function __construct() {
 
-		$this->url = $url;
-		$this->grabHtml($url);
+		$this->config = [
+			'sets' => ['HRB','VAR','Mail','Phone','Fax','Address','Social','Company','LegalForm'],
+			'url' => '',
+			'format' => ''
+		];
+
+		return $this;
 	}
 
 	/**
-	 * get html from transmitted page
+	 * set crawLee config
+	 *
+	 * @param array $config
+	 * @return crawLee
+	 */
+	public function setConfig(array $config = []): crawLee
+	{
+		try {
+			if(is_array($config)) {
+				$this->config = array_merge($this->config,$config);
+			} else {
+				throw new Exception('crawLee - Error: config needs to be array, '. gettype($config) .' given!',500);
+			}
+		} catch (Exception $e) {
+			echo $e->getMessage(), "\n";
+		}
+
+		return $this;
+	}
+
+	/**
+	 * set url to crawl
 	 *
 	 * @param string $url
-	 * @return void
+	 * @return crawLee
 	 */
-	public function grabHtml(string $url = ''): void
+	public function setUrl(string $url = ''): crawLee
 	{
-
-		if(empty($url)) {
-			$url = $this->url;
+		try {
+			if(is_string($url)) {
+				$this->url = $url;
+			} else {
+				throw new Exception('crawLee - Error: url needs to be string, '. gettype($url) .' given!',500);
+			}
+		} catch (Exception $e) {
+			echo $e->getMessage(), "\n";
 		}
 
-		$this->htmlContent = file_get_contents($url);
-	}
-
-	public function extractVAT() {
-		// The pattern expects a prefix of two letters (e.g., "DE") followed by up to 15 digits, allowing for spaces in between.
-
-		$pattern = '/([A-Z]{2}\s*)\d+(\s*\d*)*/';
-		if (preg_match($pattern, $this->htmlContent, $matches)) {
-			// Remove all spaces from the match for consistency
-			return str_replace(' ', '', $matches[0]);
-		}
-		return null;
+		return $this;
 	}
 
 	/**
-	 * extract hrb data from html content
-	 * formats like the following are considered: HRB12345, HRB 12345, HRB 1 2 3 4 5
+	 * extract html from transmitted page
 	 *
-	 * @return string|null
+	 * @return crawLee
 	 */
-	public function extractHRB(): ?string
+	public function html(): crawLee
 	{
-		if (preg_match('/HRB\s*(\d+(\s*\d*)*)/', $this->htmlContent, $matches)) {
-			// Remove all spaces from the number for consistency
-			return 'HRB'.str_replace(' ', '', $matches[1]);
+		try {
+			if(is_string($this->url)) {
+				// @TODO: maybe add curl to simulate browser and follow redirects
+				$this->html = file_get_contents($this->url);
+			} else {
+				throw new Exception('crawLee - Error: missing url to crawl!',500);
+			}
+		} catch (Exception $e) {
+			echo $e->getMessage(), "\n";
 		}
-		return null;
+
+		return $this;
 	}
 
 	/**
-	 * extract all phone numbers and convert them to a matching format and remove any duplicates
+	 * return selected extracted data
 	 *
 	 * @return array
+	 * @throws \ReflectionException
 	 */
-	public function extractPhoneNumbers(): array
+	public function extract(): array
 	{
-		// Examples: Tel. +49 123 4567890 or Phone: 0123-4567890 or Tel: (0123) 456-7890, etc.
-		$pattern = '/(Tel\.?|Phone\.?):?\s*((\+?\d{1,4}[.\-\s]?)?(\(?\d{1,5}\)?[.\-\s]?)?(\d{1,5}[.\-\s]?)*\d{1,5})/';
-		preg_match_all($pattern, $this->htmlContent, $matches);
 
-		$phoneNumbers = [];
-
-		if (isset($matches[2])) {
-			foreach ($matches[2] as $match) {
-				// Remove any character that's not a digit, not a parenthesis, and not a plus sign
-				$cleanedNumber = preg_replace('/[^\d\+\(\)]/', '', $match);
-				$phoneNumbers[] = $cleanedNumber;
-			}
+		$data = []; foreach($this->config['sets'] as $set) {
+			require_once dirname(__FILE__) . '/Adapters/Adapter'.$set.'.php';
+			$instance = (new \ReflectionClass('\\crawLee\\Adapters\\Adapter' . $set))->newInstance($this->html);
+			$data[$set] = $instance->extract();
 		}
 
-		// Remove duplicates
-		$uniquePhoneNumber = array_unique($phoneNumbers);
-
-		return array_values($uniquePhoneNumber);
-	}
-
-	/**
-	 * extract all email addresses and remove any duplicates
-	 *
-	 * @return array|string[]
-	 */
-	public function extractEmailAddresses() {
-		$pattern = '/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/';
-		preg_match_all($pattern, $this->htmlContent, $matches);
-
-		$emails = $matches[0] ?? [];
-
-		// Remove duplicates
-		$uniqueEmails = array_unique($emails);
-
-		return array_values($uniqueEmails);
-	}
-
-	public function extractSocialMediaProfiles() {
-		$profiles = [];
-		$platforms = ['facebook', 'twitter', 'linkedin', 'instagram'];
-		foreach ($platforms as $platform) {
-			if (preg_match('/https?:\/\/(www\.)?' . $platform . '.com\/[a-zA-Z0-9._-]+/', $this->htmlContent, $matches)) {
-				$profiles[$platform] = $matches[0];
-			}
-		}
-		return $profiles;
-	}
-
-	public function extractAddress() {
-		// This is just a simple representation. Actual address extraction can be much more complex.
-		if (preg_match('/\d{1,5} [\w\s]+, [\w\s]+, \w{2} \d{5}/', $this->htmlContent, $matches)) {
-			return $matches[0];
-		}
-		return null;
+		return $data;
 	}
 
 }
