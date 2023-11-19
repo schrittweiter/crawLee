@@ -9,7 +9,7 @@ namespace crawLee\Adapter;
  */
 final class AdapterSocial extends Adapter {
 
-	public function extract()
+	public function extract(): mixed
 	{
 		$profiles = [];
 		$platforms = ['facebook', 'twitter', 'linkedin', 'instagram'];

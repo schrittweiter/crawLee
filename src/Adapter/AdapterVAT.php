@@ -9,7 +9,7 @@ namespace crawLee\Adapter;
  */
 final class AdapterVAT extends Adapter {
 
-	public function extract()
+	public function extract(): mixed
 	{
 		$pattern = '/([A-Z]{2}\s*)\d+(\s*\d*)*/';
 		if (preg_match($pattern, $this->html, $matches)) {

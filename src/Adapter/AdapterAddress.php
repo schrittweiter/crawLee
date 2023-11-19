@@ -9,7 +9,7 @@ namespace crawLee\Adapter;
  */
 final class AdapterAddress extends Adapter {
 
-	public function extract()
+	public function extract(): mixed
 	{
 		// This is just a simple representation. Actual address extraction can be much more complex.
 		if (preg_match('/\d{1,5} [\w\s]+, [\w\s]+, \w{2} \d{5}/', $this->html, $matches)) {

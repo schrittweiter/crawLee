@@ -9,7 +9,7 @@ namespace crawLee\Adapter;
  */
 final class AdapterPhone extends Adapter {
 
-	public function extract()
+	public function extract(): mixed
 	{
 		// Examples: Tel. +49 123 4567890 or Phone: 0123-4567890 or Tel: (0123) 456-7890, etc.
 		$pattern = '/(Tel\.?|Phone\.?):?\s*((\+?\d{1,4}[.\-\s]?)?(\(?\d{1,5}\)?[.\-\s]?)?(\d{1,5}[.\-\s]?)*\d{1,5})/';

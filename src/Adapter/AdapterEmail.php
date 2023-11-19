@@ -9,7 +9,7 @@ namespace crawLee\Adapter;
  */
 final class AdapterEmail extends Adapter {
 
-	public function extract()
+	public function extract(): mixed
 	{
 		$pattern = '/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/';
 		preg_match_all($pattern, $this->html, $matches);

@@ -18,11 +18,11 @@ class Adapter implements AdapterInterface
 	public mixed $html;
 
 	/** 
-	 * @method __construct(string $html) Initializes a new instance of the Adapter class with the provided HTML content.
+	 * @method __construct(mixed $html) Initializes a new instance of the Adapter class with the provided HTML content.
 	 * 
-	 * @param string $html The HTML content to be used by the Adapter.
+	 * @param mixed $html The HTML content to be used by the Adapter.
 	 */
-	public function __construct(string $html) {
+	public function __construct(mixed $html) {
 		$this->html = $html;
 	}
 
@@ -31,7 +31,5 @@ class Adapter implements AdapterInterface
      *
      * @return mixed The result of the extraction process
 	 */
-	public function extract(): mixed {
-
-	}
+	public function extract(): mixed {}
 }

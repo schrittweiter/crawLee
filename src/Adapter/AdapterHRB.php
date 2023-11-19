@@ -9,7 +9,7 @@ namespace crawLee\Adapter;
  */
 final class AdapterHRB extends Adapter {
 
-	public function extract()
+	public function extract(): mixed
 	{
 		if (preg_match('/HRB\s*(\d+(\s*\d*)*)/', $this->html, $matches)) {
 			return 'HRB'.str_replace(' ', '', $matches[1]);

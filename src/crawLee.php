@@ -86,7 +86,7 @@ class crawLee
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
 		curl_setopt($ch, CURLOPT_REFERER, 'https://www.google.com');
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->config['curl']['safemode'] ?? false);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->config['curl']['useragent'] ?? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
