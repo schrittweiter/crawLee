@@ -1,11 +1,15 @@
 <?php
 
+/** Strict types */
+declare(strict_types=1);
+
 include_once '../src/crawLee.php';
 
-$website = new crawLee\crawLee();
+$websites = ['https://www.spiegel.de/impressum'];
+$crawLee = new crawLee\crawLee(['adapter' => ['VAT','HRB','Phone','Social','Email','Address']]);
 
-$website
-	->setConfig(['sets' => ['VAT','HRB','Phone','Social','Email','Address']])
-	->setUrl('https://www.spiegel.de/impressum')
-	->html()
-	->extract();
+$results = []; foreach($websites as $website) {
+	$results[$website] = $crawLee->parse($website);
+}
+
+print_r($results);

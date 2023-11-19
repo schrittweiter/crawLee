@@ -1,11 +1,13 @@
 <?php
 
-namespace crawLee\Adapters;
+declare(strict_types=1);
+
+namespace crawLee\Adapter;
 
 /**
  * Base class for data extraction
  */
-class AdapterAddress extends Base {
+final class AdapterAddress extends Adapter {
 
 	public function extract()
 	{
