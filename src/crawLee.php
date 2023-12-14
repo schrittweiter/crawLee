@@ -3,19 +3,48 @@
 /** Strict types */
 declare(strict_types=1);
 
-/** Namespace */
+/**
+ * The crawLee class is responsible for extracting and processing data from web pages.
+ */
 namespace crawLee;
 
 /** Includes */
 require __DIR__.'/../vendor/autoload.php';
 
 /** Exceptions */
-use crawLee\Exception\InvalidTypeException;
+use /**
+ * Exception class for handling invalid type errors.
+ *
+ * This exception is thrown when trying to perform an operation with an invalid type.
+ * It should be used to handle situations where the expected type is not matched.
+ *
+ * @package crawLee\Exception
+ */
+	crawLee\Exception\InvalidTypeException;
 
-/** Class */
+/**
+ * @var array $config Holds the default configuration settings
+ */
 class crawLee 
 {
-	/** @var array Holds the default configuration settings */
+	/**
+	 * Represents the configuration data for the application.
+	 *
+	 * This variable stores the configuration data for the application, which includes
+	 * various settings and options. It is structured as an associative array, where each
+	 * key represents a specific setting or option, and its corresponding value represents
+	 * the value assigned to that setting or option.
+	 *
+	 * The 'adapter' key represents the list of available adapters, such as 'HRB', 'VAT',
+	 * 'Mail', 'Phone', 'Fax', 'Address', 'Social', 'Company', and 'LegalForm'.
+	 *
+	 * The 'openai' key represents the OpenAI configuration, which includes sub-keys like
+	 * 'key', 'model', and 'proxy'. The 'key' represents the API key for OpenAI. The 'model'
+	 * represents the specific model to be used, which is set to 'gpt-3.5-turbo-instruct'
+	 * in this case. The 'proxy' represents the proxy configuration, if any.
+	 *
+	 * @var array
+	 */
 	private array $config = [
 		'adapter' => ['HRB','VAT','Mail','Phone','Fax','Address','Social','Company','LegalForm'],
 		'openai' => [
@@ -25,13 +54,22 @@ class crawLee
 		]
 	];
 
-	/** @var array Stores the original configuration settings */
+	/**
+	 * Represents the original configuration data.
+	 *
+	 * This variable stores the original configuration data before any modifications
+	 * or updates are made. It serves as a reference point to compare the changes made
+	 * to the configuration data.
+	 *
+	 * @var array
+	 */
 	private array $configOrigin;
 
 	/**
-	 * @method void __construct(array $config = []) Constructor to initialize the crawLee object.
-	 * 
-     * @param array $config An optional configuration array to override default settings.
+	 * Constructor for the class.
+	 *
+	 * @param array $config An array containing configuration parameters. Defaults to an empty array.
+	 * @return void
 	 */
 	public function __construct(array $config = []) 
 	{
@@ -39,11 +77,13 @@ class crawLee
 	}
 
 	/**
-	 * @method self setConfig(array $config = []) Set or update the configuration settings.
-	 * 
-     * @param array $config An array of configuration settings.
-     * @return self Returns the instance of the class for chaining.
-     * @throws InvalidTypeException If the provided $config is not an array.
+	 * Set the configuration for this class.
+	 *
+	 * @param array $config The configuration options.
+	 *
+	 * @return self Returns an instance of the class.
+	 * @throws InvalidTypeException If the config parameter is not an array.
+	 *
 	 */
 	public function setConfig(array $config = []): self
 	{
@@ -57,9 +97,9 @@ class crawLee
 	}
 
 	/**
-	 * @method self resetConfig() Reset the configuration to its original state.
-	 * 
-     * @return self Returns the instance of the class for chaining.
+	 * Resets the configuration to its original state.
+	 *
+	 * @return self Returns an instance of the current object.
 	 */
 	public function resetConfig(): self
 	{
@@ -69,11 +109,13 @@ class crawLee
 	}
 
 	/**
-	 * @method array parse(string $url) Extract and process HTML from the specified URL.
-	 * 
-     * @param string $url The URL of the web page to scrape.$_COOKIE
-     * @return array Returns an array of extracted data.
-     * @throws InvalidTypeException If there's an issue with data extraction.
+	 * parse
+	 *
+	 * This method performs a cURL session to retrieve HTML from the given URL and process it using defined adapters.
+	 *
+	 * @param string $url The URL to retrieve HTML from
+	 *
+	 * @return array Returns an associative array containing the extracted data by each adapter
 	 */
 	public function parse(string $url): array
 	{

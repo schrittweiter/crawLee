@@ -3,33 +3,44 @@
 /** Strict types */
 declare(strict_types=1);
 
-/** Namespace */
 namespace crawLee\Adapter;
 
-/** Interfaces */
+/**
+ * Interface AdapterInterface
+ *
+ * This interface defines the required methods that an adapter class must implement.
+ */
 use crawLee\Interface\AdapterInterface;
 
-/** Class */
+/**
+ * Adapter class that implements the AdapterInterface.
+ *
+ * This class implements the AdapterInterface and provides functionality to extract information from HTML content.
+ */
 class Adapter implements AdapterInterface 
 {
 	/**
-     * @var mixed Holds the HTML content to be processed.
-     */
+	 * The HTML code for the web page.
+	 *
+	 * @var string
+	 */
 	public mixed $html;
 
-	/** 
-	 * @method __construct(mixed $html) Initializes a new instance of the Adapter class with the provided HTML content.
-	 * 
-	 * @param mixed $html The HTML content to be used by the Adapter.
+	/**
+	 * Constructor method for the class.
+	 *
+	 * @param mixed $html The HTML content to be assigned to the object property.
+	 *
+	 * @return void
 	 */
 	public function __construct(mixed $html) {
 		$this->html = $html;
 	}
 
 	/**
-	 * @method mixed extract() extract information from the stored HTML content.
-     *
-     * @return mixed The result of the extraction process
+	 * Extracts data from the provided source.
+	 *
+	 * @return mixed The extracted data.
 	 */
 	public function extract(): mixed {}
 }
